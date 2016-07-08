@@ -42,6 +42,6 @@ We will be using the android.hardware.camera2 package from the Android SDK. This
 
 Go ahead and set the minimum SDK to Android API 21 (Lollipop) for phone and tablet development.
 
-Minimum SDK 21 for new project We will start from scratch, but initialize our project with an empty activity. Call that activity MainActivity, which should be the default name in Android Studio.  The project will initialize and leave us with a relatively empty project looking like this: New project empty and loaded Now we need to add OpenCV to our Android project.
+We will start from scratch, but initialize our project with an empty activity. Call that activity MainActivity, which should be the default name in Android Studio.  The project will initialize and leave us with a relatively empty project looking like this: New project empty and loaded Now we need to add OpenCV to our Android project.
 
 
