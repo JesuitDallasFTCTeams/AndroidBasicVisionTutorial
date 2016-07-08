@@ -21,8 +21,6 @@ The above being said, we will touch on many of the concepts from the "hello worl
 
 The OpenCV project that we are bridging towards is something like the color-blob-detection sample, so we will draw from this sample in part in order to show some post-hello-world steps.
 
-Again, we will be using Android Studio for the development of our project. Having completed one or two projects in Android Studio is probably sufficient to get through this tutorial, but some basic knowledge is presumed. I recommend you start here if you haven't built anything in Android Studio before.
-
 I will assume that you already have Android Studio installed, though I will run through some basics about getting a virtual Android device running on your machine that meets our needs for OpenCV.
 
 ###Download OpenCV
@@ -81,6 +79,34 @@ Anyways, you'll now notice that our sync has succeeded with no errors. E.g., the
 Note that we also needed to change the build tools version to "22.0.1" in both Gradle files, as well as a dependency in the app Gradle file to "compile 'com.android.support:appcompat-v7:22.2.0'".
 
 We will be using an emulated virtual device that we can create in Android Studio to run our OpenCV applications.
+
+###Create a Virtual Device
+Our virtual device will use my Macbook Pro's built-in webcam as the emulated phone's back camera. We will use a fully emulated camera for the front camera, which we will not use with OpenCV in this tutorial.
+
+Using the Android Virtual Device Manager, let's create a new virtual device using the AVD icon.
+
+Running an Android emulation is quite memory intensive to forewarn you. Let's go ahead and create a new virtual device.
+
+For the sake of this example I will create a virtual Nexus 6.
+
+Now we want our emulated Nexus 6 to run Android Lollipop 5.1 using an x86 system image.
+
+You can leave the default settings on the main page of the device settings, but we need to activate the camera for our emulation to use with OpenCV. Open the advanced settings.
+
+Select the appropriate camera settings for the front and back cameras. Again, we will emulate the front camera and use a built-in webcam as the back camera for OpenCV.
+
+Go ahead and hit Finish. It may take a minute for our new virtual device to be saved.
+
+Once the virtual device is successfully saved, you can close the AVD Manager.
+
+Now let's start our virtual device up by running our app using the run icon.
+
+Launch the newly created emulator to run the app.
+
+The virtual device will boot up as if you had clicked the power button of a real device for the first time. This usually takes a bit longer than typical bootup time, but somewhere around 3 to 5 minutes is typical on my machine.
+
+Now, before we move any further and actually develop an OpenCV application, we must make the OpenCV library available to our app for use.
+Again, we will be using Android Studio for the development of our project. Having completed one or two projects in Android Studio is probably sufficient to get through this tutorial, but some basic knowledge is presumed. I recommend you start here if you haven't built anything in Android Studio before.
 
 
 
