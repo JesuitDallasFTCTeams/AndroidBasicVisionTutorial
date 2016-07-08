@@ -56,5 +56,31 @@ Now, you will see a summary of the module import. You will see that a few things
 
 This has to do with the default Android API expected by the OpenCV build, which we will fix below.
 
+###Modify Gradle Build
+We will use Grade to run our build configuration.
+
+Open the build.gradle files for our two modules: one for the app module and one for the OpenCV module. You will notice that they look something like the below and thus do not match one another.
+
+What we need to do is ensure that our minimum SDK is set to the correct Android API we're after, as well as our compile and target SDK versions.
+
+Set the minimum SDK version to API 21 and the compile SDK version and target SDK version to API 22 in both build.gradle files.
+
+Android API 23 has a new set of permissions standards that are beyond this tutorial, thus we will be targeting the newest Lollipop API instead of jumping into Marshmallow.
+
+Go ahead and sync the Gradle files using the Gradle sync icon (or use Android Studio's sync prompt):
+
+
+If you do not already have the necessary Android API versions downloaded, Android Studio may prompt you to download the correct build tools and correct SDK.
+
+Without being prompted, you may manage your available SDKs using the SDK Manager:
+
+Clicking the appropriate SDK versions for your build and clicking install automates the download process of the SDK for you in Android Studio.
+
+Anyways, you'll now notice that our sync has succeeded with no errors. E.g., the camera2 components are now resolved in the Camera2Renderer class in the OpenCV library, because camera2 only exists for Android API 21 or later.
+
+Note that we also needed to change the build tools version to "22.0.1" in both Gradle files, as well as a dependency in the app Gradle file to "compile 'com.android.support:appcompat-v7:22.2.0'".
+
+We will be using an emulated virtual device that we can create in Android Studio to run our OpenCV applications.
+
 
 
