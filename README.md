@@ -81,7 +81,7 @@ Note that we also needed to change the build tools version to "22.0.1" in both G
 We will be using an emulated virtual device that we can create in Android Studio to run our OpenCV applications.
 
 ###Create a Virtual Device
-Our virtual device will use my Macbook Pro's built-in webcam as the emulated phone's back camera. We will use a fully emulated camera for the front camera, which we will not use with OpenCV in this tutorial.
+Our virtual device will use my Macbook Air's built-in webcam as the emulated phone's back camera. We will use a fully emulated camera for the front camera, which we will not use with OpenCV in this tutorial.
 
 Using the Android Virtual Device Manager, let's create a new virtual device using the AVD icon.
 
@@ -107,6 +107,45 @@ The virtual device will boot up as if you had clicked the power button of a real
 
 Now, before we move any further and actually develop an OpenCV application, we must make the OpenCV library available to our app for use.
 Again, we will be using Android Studio for the development of our project. Having completed one or two projects in Android Studio is probably sufficient to get through this tutorial, but some basic knowledge is presumed. I recommend you start here if you haven't built anything in Android Studio before.
+
+###Add OpenCV Library
+What we did above by importing OpenCV is make the OpenCV classes available to the app for use within the app. If we try to use any OpenCV classes, you'll notice that Android Studio doesn't know how to resolve any objects that we declare. This is because we must initialize our app's environment with the libraries that we plan to use. We overcome this by making the full OpenCV libraries available to our app. We can do this by pointing our app to the library asynchronously at runtime, or we can statically upload the library to our app's project files.
+
+What we will do here for development is called static initialization. This is meant for the purpose of development where we, as the developer, are hosting the OpenCV library as a part of the app's project files, so the app has the entire backend library at its fingertips. 
+
+So we will be using our own copy of the library inside our app's project files while we develop in Android Studio. What we will do when the app is actually running is use OpenCV Manager, which is an app that allows us to access OpenCV libraries using async initialization. I will show how to download OpenCV Manager to your emulated device later on.
+
+do the following:
+
+Go to the "Project" tab in the file directory listing view (we are currently in the "Android" tab). Create a libraries folder underneath your project's main directory. For my project named OpenCVTutorial, I am creating an OpenCVTutorial/libraries folder.
+
+
+Now, from the OpenCV SDK folder that we unzipped in the beginning, go to the sdk/java file that we imported as the module. Copy the java file. Paste this file into the new libraries directory that we just created in the project folder. Upon pasting, Android Studio will prompt us for a new name for the file. Enter the name "opencv". This is a large file and may take a minute to paste.
+
+Now we must create a build.gradle file for the OpenCV library. Go ahead and create a new build.gradle file in the newly copied opencv directory.
+
+The new build.gradle file needs the following contents:
+
+Our settings.gradle file for our project now needs to know that we have the OpenCV library available. In our settings.gradle file in the project directory, add "include ':libraries:opencv'". 
+
+Go ahead and sync your project. It should complete without any errors.
+
+Now we must add our new library as a depenency of our app module. Right-click the project folder and click Open Module Settings.
+
+Go to our app module, where we will add a new module dependency.
+
+Add our newly created library as a dependency.
+
+The final thing we must do in order to use the OpenCV library statically is copy all of the JNI library files for the different architectures from the OpenCV SDK into our app module.
+
+Go to the OpenCV SDK and go to the native directory within the sdk file. We want all of the architecture files out the libs folder within the native directory. Copy all of these files.
+
+Back in the app module, go to app/src/main. Within this directory, create a new directory called "jniLibs". Paste all of the architecture JNI library files into this new directory.
+
+Now we can get on and start coding a bit using the OpenCV library in our app! The first thing we're going to do is get the camera up and running and displaying an image for us using the webcam.
+
+
+
 
 
 
