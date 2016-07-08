@@ -37,11 +37,24 @@ Go ahead and open Android Studio.
 
 Create a new project. Call it OpenCVTutorial (or whatever you'd like) and define a "company domain".
 
-New project info
+
 We will be using the android.hardware.camera2 package from the Android SDK. This requires a minimum SDK defined as Android API 21 or later. You do not need to worry much about this package, as that will not be the focus of this tutorial.
 
 Go ahead and set the minimum SDK to Android API 21 (Lollipop) for phone and tablet development.
 
 We will start from scratch, but initialize our project with an empty activity. Call that activity MainActivity, which should be the default name in Android Studio.  The project will initialize and leave us with a relatively empty project looking like this: New project empty and loaded Now we need to add OpenCV to our Android project.
+
+###Import OpenCV Module
+
+To import OpenCV into our project, we import OpenCV as a new module. We do this with File → New → Import Module...
+
+Navigate to where you unzipped the OpenCV SDK and add the sdk/java folder as the module to be imported.
+
+Leave the default settings checked and import the OpenCV library.
+
+Now, you will see a summary of the module import. You will see that a few things seem broken or cannot be resolved in the OpenCV library from the initial import.
+
+This has to do with the default Android API expected by the OpenCV build, which we will fix below.
+
 
 
