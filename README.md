@@ -144,6 +144,140 @@ Back in the app module, go to app/src/main. Within this directory, create a new 
 
 Now we can get on and start coding a bit using the OpenCV library in our app! The first thing we're going to do is get the camera up and running and displaying an image for us using the webcam.
 
+###Get the Camera Working
+The first thing that we need to do is get our XML layout file ready to use with the camera. Open activity_main.xml found in path app/main/res/layout. Delete the Hello World TextView provided by Android Studio in this file.
+
+Change the RelativeLayout tag by deleting all of the attributes except for:
+
+xmlns:android="..."
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+
+and add the attribute:
+
+android:orientation="horizontal"
+Layout skeleton
+You can change the layout preview to a Nexus 6 if you would like to get a better picture of what our emulator will look like.
+
+Now we need to add a new JavaCameraView from the OpenCV library that will take up the entirety of the screen. Add the new view as the following, giving it an ID:
+
+You can see in the layout preview that the JavaCameraView appears, taking up the entirety of the app screen.
+
+When the app starts, we need to get the camera started and display the camera feed in this view. Now that we have the view defined in the layout, let's see how we can get access to the camera.
+
+Open the MainActivity.java class file. We need to implement the following methods:
+
+* onCreate
+* onPause
+* onResume
+* onDestroy
+In addition to those methods, we will also implement a BaseLoaderCallback method, which will be used with OpenCV Manager in order to operate our app with the OpenCV libraries.
+
+When we open the app, we want to open the camera for use with our OpenCV library and we want to display the camera's feed to the JavaCameraView.
+
+As we implement the methods above, we will need to import a number of components. I will show a few of them, but Android Studio will let you know when you must import a new component. I will provide screen shots of everything imported at key stages.
+
+* onCreate Method
+
+ The first thing we need to do is force the screen to stay on when the app is opened
+
+
+ Now we need to declare a new CameraBridgeViewBase object from the OpenCV library that we will use to let our app know that we are using a camera whose feed should be displayed in the JavaCameraView defined in the activity_main.xml layout file.
+
+ Add CameraBridgeViewBase Declare CameraBridgeViewBase
+ Get the JavaCameraView by its ID and set its visibility to visible. Set the camera listener to our current activity.
+
+ Add SurfaceView Set camera listener
+ Note that we are passing "this" to the setCvCameraViewListener method. In order for this to work we must specify that our activity MainActivity implements CvCameraViewListener2. We will also specify that MainActivity implements our OnTouchListener as well, which we will see later.
+
+ MainActivity Import Implement
+ Go ahead and explicitly import:
+
+ android.view.View.OnTouchListener
+ org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2
+ MainActivity Implements OnTouchListener and CvCameraViewListener2
+ Android Studio gives us an error here because in order to for MainActivity to implement OnTouchListener and CvCameraListener2, we need some guaranteed methods defined. Go ahead and let Android Studio create those methods for you. We will work with these momentarily.
+
+ Implement methods Implement method list Implemented methods
+ onPause Method
+
+ To implement onPause, we would simply like to disable the view that we are using. The disable view method relinquishes the camera for us (internally calling the release method on the camera) so that other apps may use it.
+
+ onPause Method
+ onResume Method
+
+ This method is a bit more complex, as we will invoke our BaseLoaderCallback method from the OpenCV library, which we will use to reinstantiate our OpenCV view appropriately. This method will be a bit clearer when we implement the BaseLoaderCallback function for our activity in a moment.
+
+ onResume Method
+ Note that mLoaderCallback is our instance of the BaseLoaderCallback for this activity, so we will take care of that error in a moment.
+
+ onDestroy Method
+
+ Similar to the onPause method, we simply would like to disable the view that we are using with onDestroy.
+
+ onDestroy Method
+ BaseLoaderCallback
+
+ When we declare a new BaseLoaderCallback, Android Studio knows that we need at least some guaranteed methods in order to use it. For this one, we only need to add the onManagerConnected method.
+
+ Implement BaseLoaderCallback methods BaseLoaderCallback
+ Now when we have OpenCV Manager installed on our device, when we resume our app's usage, we are using async initialization to load our OpenCV library and reinstantiate our view. Take a look again at how async is used in the onResume function, now error free:
+
+ 
+ This is everything we have imported thus far:
+
+
+ Let's run the app and see what we have so far! When you are running the app, keep the emulator open and reuse the same virtual device without relaunching it. It will act as if a device is connected by USB, more or less. You can install apps, uninstall apps, and generally use the virtual device as if it were a full Android device.
+
+ After a minute or two, your app will automatically open on your virtual device.
+
+ 
+ Oh no! What happened here? We specified that the emulator should use the webcam and everything!
+
+ Simple! We forgot to specify that our app has permission to use the camera and that our app will be using camera features in our project's AndroidManifest.xml file. Add the following uses-permissions and uses-feature tags to that file.
+
+ Manifest permissions
+ Run the app again.
+
+ Why doesn't anything appear? The app is allowed to use the camera and the webcam should be working...
+
+ This is an issue with the way that we deal with camera input with the OpenCV library. Remember the methods that were automatically created when we said this activity implements a CvCameraViewListener2? That's what we must do next.
+
+ Declare a private Mat variable called mRgba. RGBA is simply the RGB color model, while the A has to do with transparency.
+
+ mRgba Variable
+ Now we must implement the following methods:
+
+ onCameraViewStarted
+ onCameraViewStopped
+ onCameraFrame
+ The implementation of these is straightforward, so I will just give them all to you at once:
+
+ Camera view and frame methods
+ When our camera view starts, we want to save a new matrix to our mRgba variable.
+ When a camera view stops, we want to free this matrix.
+ While the camera is running, we want to store the inputFrame in the matrix that we created and return it.
+ Now go ahead and run the app again.
+
+ We have a bizarre problem. If your emulation works like mine, this is what your virtual device looks like:
+
+ 
+ This is a serious problem considering the app we are trying to create expressly involves encoding colors into its RGB notation with  OpenCV. Clearly there is something wrong with how the colors of the image are encoded at some layer of our abstracted camera.
+
+ I will be brief in summing up a solution I found here (StackOverflow). Basically the encoding that we are using must be changed within the OpenCV's JavaCameraView class when we are using this type of emulator:
+
+
+ Add the following highlighted code to that class:
+
+ 
+ And modify the public Mat rgba() method:
+
+ 
+ And that should do it! Run your app again on your emulator and you should see the following:
+
+
+ Alright, we are just about ready to move into the image processing phase of our app development! First we are going to quickly touch on how to get OpenCV Manager installed on our emulator so that we know how to emulate a real-world working OpenCV app.
+
 
 
 
